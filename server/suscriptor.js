@@ -2,6 +2,8 @@ const http = require('http');
 const express = require('express');
 const SocketIO = require('socket.io');
 const mqtt = require('mqtt');
+const argv = require('.././config/yargs').argv;
+const color = require('colors'); 
 
 app = express();
 const server = http.createServer(app);
@@ -13,12 +15,15 @@ app.use(express.static(publicPath));
 
 const io = SocketIO.listen(server);
 io.on('connection', (client) => {
-    console.log('========= Usuario conectado =========');
+    console.log('========= Usuario conectado ========='.red);
 })
 
-const client  = mqtt.connect('mqtt://192.168.1.112');
+const client  = mqtt.connect(`mqtt://${argv.ip}`);
 client.on('connect', function () {
     client.subscribe('myTopic')
+    console.log("========= ip servidor =========".yellow);
+    console.log(`${argv.ip}`.yellow);
+    console.log('==============================='.yellow);
 })
 client.on('message', function (topic, message) {
     context = message.toString();
@@ -31,7 +36,7 @@ client.on('message', function (topic, message) {
 
 
 server.listen(3000, () => {
-    console.log('========= Server escuchando en el puerto =========');
-    console.log("3000");
-    console.log("===SERVER ADRESS==",server.address());
+    console.log('========= Server web escuchando en el puerto ========='.green);
+    console.log("3000".green);
+    console.log(`${server.address()}`.green);
 });

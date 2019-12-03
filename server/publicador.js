@@ -1,5 +1,7 @@
-var mqtt = require('mqtt');
-var client  = mqtt.connect('mqtt://192.168.1.112');
+const mqtt = require('mqtt');
+const argv = require('.././config/yargs').argv;
+
+const client  = mqtt.connect(`mqtt://${argv.ip}`);
 client.on('connect', function () {
     setInterval(function() {
         client.publish('myTopic', 'Hello mqtt');
